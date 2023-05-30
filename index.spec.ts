@@ -19,25 +19,23 @@ describe("Character Class", () => {
     expect(target.health).toBe(500);
   })
 
-  it("can heal another character", () => {
+  it("can only heal itself", () => {
     const healer = new Character();
-    const target = new Character();
+    
+    healer.health = 500;
+    healer.heal(500);
 
-    target.health = 500;
-    healer.heal(target, 500);
-
-    expect(target.health).toBe(1000);
+    expect(healer.health).toBe(1000);
   })
 
   it("can't heal a dead character", () => {
     const healer = new Character();
-    const target = new Character();
 
-    target.alive = false;
-    target.health = 0;
-    healer.heal(target, 500);
+    healer.alive = false;
+    healer.health = 0;
+    healer.heal(500);
 
-    expect(target.health).toBe(0);
+    expect(healer.health).toBe(0);
   })
 
   it("kills a character when health reaches 0", () => {
@@ -48,5 +46,41 @@ describe("Character Class", () => {
 
     expect(target.health).toBe(0);
     expect(target.alive).toBe(false);
+  })
+
+  it("can't heal a character above 1000 health", () => {
+    const healer = new Character();
+
+    healer.heal(500);
+
+    expect(healer.health).toBe(1000);
+  })
+
+  it("reduces attach for character 5 or more level above", () => {
+    const attacker = new Character();
+    const target = new Character();
+
+    target.level = 6;
+    attacker.attack(target, 500);
+
+    expect(target.health).toBe(750);
+  })
+
+  it("increases attach for character 5 or more level below", () => {
+    const attacker = new Character();
+    const target = new Character();
+
+    attacker.level = 6;
+    attacker.attack(target, 500);
+
+    expect(target.health).toBe(250);
+  })
+
+  it("can't attack itself", () => {
+    const attacker = new Character();
+
+    attacker.attack(attacker, 500);
+
+    expect(attacker.health).toBe(1000);
   })
 })
