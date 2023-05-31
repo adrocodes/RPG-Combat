@@ -5,13 +5,16 @@ export class Character {
   public level: number = 1;
   public alive: boolean = true;
   public id: number;
+  public range: number = 0;
 
   constructor() {
     this.id = Character._id++;
   }
 
-  public attack(target: Character, amount: number) {
+  public attack(target: Character, amount: number, distance: number = 0) {
     if (this.id === target.id) return;
+
+    if (this.range < distance) return;
 
     let multipler = 1;
 
@@ -34,5 +37,19 @@ export class Character {
 
     this.health += amount;
     this.health = Math.min(this.health, 1000);
+  }
+}
+
+export class MeleeCharacter extends Character {
+  constructor() {
+    super()
+    this.range = 2;
+  }
+}
+
+export class RangedCharacter extends Character {
+  constructor() {
+    super()
+    this.range = 20;
   }
 }
