@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { Character } from "./index";
+import { Character, MeleeCharacter, RangedCharacter } from "./index";
 
 describe("Character Class", () => {
   it("should have health, level and alive properties", () => {
@@ -82,5 +82,23 @@ describe("Character Class", () => {
     attacker.attack(attacker, 500);
 
     expect(attacker.health).toBe(1000);
+  })
+
+  it("melee - can't attack a character out of range", () => {
+    const attacker = new MeleeCharacter();
+    const target = new Character();
+
+    attacker.attack(target, 500, 3);
+
+    expect(target.health).toBe(1000);
+  })
+
+  it("range - can't attack a character out of range", () => {
+    const attacker = new RangedCharacter();
+    const target = new Character();
+
+    attacker.attack(target, 500, 21);
+
+    expect(target.health).toBe(1000);
   })
 })
