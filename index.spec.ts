@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { Character, MeleeCharacter, RangedCharacter } from "./index";
+import { Character, Faction, MeleeCharacter, RangedCharacter } from "./index";
 
 describe("Character Class", () => {
   it("should have health, level and alive properties", () => {
@@ -98,6 +98,60 @@ describe("Character Class", () => {
     const target = new Character();
 
     attacker.attack(target, 500, 21);
+
+    expect(target.health).toBe(1000);
+  })
+
+  it("can join a faction", () => {
+    const character = new Character();
+    const faction = new Faction("faction1")
+
+    character.joinFaction(faction);
+
+    expect(character.factions).toContain(faction);
+  })
+
+  it("can't join a faction twice", () => {
+    const character = new Character();
+    const faction = new Faction("faction1")
+
+    character.joinFaction(faction);
+    character.joinFaction(faction);
+
+    expect(character.factions.length).toBe(1);
+  })
+
+  it("can leave a faction", () => {
+    const character = new Character()
+    const faction = new Faction("faction1")
+
+    character.joinFaction(faction);
+    character.leaveFaction(faction);
+
+    expect(character.factions.length).toBe(0);
+  })
+
+  it("can't damage a character in the same faction", () => {
+    const attacker = new Character();
+    const target = new Character();
+    const faction = new Faction("faction1")
+
+    attacker.joinFaction(faction);
+    target.joinFaction(faction);
+    attacker.attack(target, 500);
+
+    expect(target.health).toBe(1000);
+  })
+
+  it("can heal a character in the same faction", () => {
+    const healer = new Character();
+    const target = new Character();
+    const faction = new Faction("faction1")
+
+    healer.joinFaction(faction);
+    target.joinFaction(faction);
+    target.health = 500;
+    healer.healAllies(target, 500);
 
     expect(target.health).toBe(1000);
   })
