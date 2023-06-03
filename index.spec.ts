@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { Character, Faction, MeleeCharacter, RangedCharacter } from "./index";
+import { Character, Faction, MeleeCharacter, Prop, RangedCharacter } from "./index";
 
 describe("Character Class", () => {
   it("should have health, level and alive properties", () => {
@@ -154,5 +154,31 @@ describe("Character Class", () => {
     healer.healAllies(target, 500);
 
     expect(target.health).toBe(1000);
+  })
+
+  it("can create a prop", () => {
+    const tree = new Prop("tree", 2000);
+    
+    expect(tree.name).toBe("tree");
+    expect(tree.health).toBe(2000);
+  })
+
+  it("a character can attack a prop", () => {
+    const attacker = new Character();
+    const tree = new Prop("tree", 2000);
+
+    attacker.attack(tree, 500);
+
+    expect(tree.health).toBe(1500);
+  })
+
+  it("a prop dies when health reaches 0", () => {
+    const attacker = new Character();
+    const tree = new Prop("tree", 2000);
+
+    attacker.attack(tree, 2000);
+
+    expect(tree.health).toBe(0);
+    expect(tree.alive).toBe(false);
   })
 })
